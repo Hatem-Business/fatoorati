@@ -1,2 +1,8 @@
 fatoorati-pro.html
 *.md
+src/
+vendor/
+build.js
+publish.cmd
+landing.html
+*.cmd

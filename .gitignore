@@ -1,4 +1,5 @@
 fatoorati-pro.html
+fatoorati-free.html
 *.md
 src/
 vendor/
@@ -6,3 +7,4 @@ build.js
 publish.cmd
 landing.html
 *.cmd
+شارك.html

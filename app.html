@@ -581,7 +581,19 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     {desc:'إدارة حسابات التواصل الاجتماعي (شهريًا)',qty:3,price:1800},
     {desc:'تصوير فوتوغرافي للمنتجات',qty:1,price:1200}
   ];
-  var archive=[], clients=[];
+  var archive=[], clients=[], openedId=null;
+
+  function splitNo(v){var m=String(v==null?'':v).match(/^(.*?)(\d+)\s*$/);return m?{pre:m[1],num:+m[2],len:m[2].length}:null}
+  function nextDocNo(cur){
+    var c=splitNo(cur);if(!c)return cur;
+    var hi=c.num;
+    archive.forEach(function(r){var q=splitNo(r.no);if(q&&q.pre===c.pre&&q.num>hi)hi=q.num});
+    return c.pre+String(hi+1).padStart(c.len,'0');
+  }
+  function syncStores(){
+    var a=readJSON(ARC,[]);archive=Array.isArray(a)?a:[];
+    var c=readJSON(CLI,[]);clients=Array.isArray(c)?c:[];
+  }
 
   /* ---------- items ---------- */
   function renderItems(){
@@ -758,8 +770,8 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
   });
 
   $('#newDocBtn').addEventListener('click',function(){
-    var n=els.docNo.value.match(/(\d+)\s*$/);
-    if(n)els.docNo.value=els.docNo.value.replace(/(\d+)\s*$/,String(+n[1]+1).padStart(n[1].length,'0'));
+    els.docNo.value=nextDocNo(els.docNo.value);
+    openedId=null;
     items=[{desc:'',qty:1,price:0}];
     issueTime=C.localHMS();
     els.docDate.value=C.localYMD();
